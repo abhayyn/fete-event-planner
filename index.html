@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fête — AI Celebration & Event Planner</title>
+<style>
+:root{--bg:#fff8f1;--card:#fff;--ink:#2a1f2d;--mute:#6b5b6e;--acc:#b4235a;--acc2:#f3b23c;--line:#ecdcd0;--ok:#1f7a4d;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1320;--card:#251b2d;--ink:#f6ecf3;--mute:#c4b3c9;--acc:#ff7fb0;--acc2:#f3b23c;--line:#3b2d44;--ok:#6fd6a0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1a1320;--card:#251b2d;--ink:#f6ecf3;--mute:#c4b3c9;--acc:#ff7fb0;--acc2:#f3b23c;--line:#3b2d44;--ok:#6fd6a0;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.skip{position:absolute;left:-999px}.skip:focus{left:8px;top:8px;background:var(--acc);color:#fff;padding:8px 12px;z-index:9;border-radius:6px}
+header{padding:28px 20px 8px;max-width:980px;margin:auto}
+h1{font:700 clamp(28px,5vw,44px)/1.1 Georgia,"Times New Roman",serif;margin:0 0 6px}
+h1 span{color:var(--acc)}
+p.sub{color:var(--mute);margin:0;max-width:60ch}
+main{max-width:980px;margin:auto;padding:12px 20px 60px;display:grid;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+h2{font:700 20px Georgia,serif;margin:0 0 12px}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+label{display:grid;gap:4px;font-weight:600;font-size:14px}
+input,select,textarea,button{font:inherit;color:inherit}
+input,select,textarea{padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);width:100%}
+:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+.full{grid-column:1/-1}
+.btn{background:var(--acc);color:#fff;border:0;padding:12px 20px;border-radius:12px;font-weight:700;cursor:pointer}
+html:not([data-theme="dark"]) .btn{background:#a01c50}
+.btn.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+.btn:disabled{opacity:.6;cursor:wait}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:var(--bg);padding:8px 14px;border-radius:99px;cursor:pointer;font-weight:600}
+.pill[aria-pressed="true"]{background:var(--acc);color:#fff;border-color:var(--acc)}
+html:not([data-theme="dark"]) .pill[aria-pressed="true"]{background:#a01c50}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.bar{display:grid;grid-template-columns:130px 1fr auto;gap:10px;align-items:center;margin:8px 0;font-size:14px}
+.track{height:12px;background:var(--line);border-radius:9px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+ul{list-style:none;padding:0;margin:0}
+li.t{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
+li.t input{width:20px;height:20px;margin-top:3px}
+li.done span{text-decoration:line-through;color:var(--mute)}
+.when{display:inline-block;font-size:12px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.04em}
+.idea{padding:10px 12px;border-left:4px solid var(--acc2);background:var(--bg);border-radius:8px;margin:8px 0}
+.prog{font-weight:700;color:var(--ok)}
+.note{font-size:13px;color:var(--mute)}
+.err{color:#b3261e;font-weight:600}
+@media(max-width:520px){.bar{grid-template-columns:1fr auto}.bar .track{grid-column:1/-1}}
+@media print{.noprint{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#plan">Skip to plan</a>
+<header>
+  <h1>Fête<span>.</span> Your AI event planner</h1>
+  <p class="sub">Tell us about your wedding, birthday or community event. Get a budget split, a countdown timeline, a vendor checklist and ideas made for you.</p>
+</header>
+<main>
+<section class="card noprint" aria-labelledby="f">
+  <h2 id="f">1. Describe your celebration</h2>
+  <form id="form" autocomplete="off">
+    <div class="full"><span id="tl" style="font-weight:600;font-size:14px">Event type</span>
+      <div class="pills" role="group" aria-labelledby="tl" id="types"></div></div>
+    <label>Event name<input id="name" value="Riya’s Birthday Bash" maxlength="60"></label>
+    <label>City<input id="city" value="Delhi" maxlength="40"></label>
+    <label>Date<input id="date" type="date"></label>
+    <label>Guests<input id="guests" type="number" min="2" max="2000" value="50"></label>
+    <label>Total budget<input id="budget" type="number" min="1000" step="1000" value="150000"></label>
+    <label>Currency<select id="cur"><option>₹</option><option>$</option><option>€</option><option>£</option></select></label>
+    <label class="full">Vibe, theme or special wishes<textarea id="vibe" rows="2" maxlength="300">Fun, colourful, vegetarian menu, a few kids attending</textarea></label>
+    <div class="full row"><button class="btn" id="go" type="submit">✨ Plan my celebration</button>
+      <span class="note" id="status" role="status" aria-live="polite"></span></div>
+  </form>
+</section>
+
+<div id="plan" tabindex="-1" hidden>
+  <div class="card" style="margin-bottom:18px">
+    <div class="row" style="justify-content:space-between">
+      <div><h2 id="ptitle" style="margin:0"></h2><div class="note" id="pmeta"></div></div>
+      <div class="row noprint"><button class="btn ghost" id="dl">Download plan</button><button class="btn ghost" onclick="print()">Print</button></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <section class="card" aria-labelledby="bh"><h2 id="bh">Budget breakdown</h2><div id="budgetBox"></div><p class="note" id="perhead"></p></section>
+    <section class="card" aria-labelledby="ih"><h2 id="ih">Personalised ideas</h2><div id="ideas"></div></section>
+    <section class="card" aria-labelledby="th"><h2 id="th">Timeline</h2><p class="prog" id="tprog" aria-live="polite"></p><ul id="timeline"></ul></section>
+    <section class="card" aria-labelledby="vh"><h2 id="vh">Vendor checklist</h2><p class="prog" id="vprog" aria-live="polite"></p><ul id="vendors"></ul></section>
+  </div>
+</div>
+</main>
+<script>
+const TYPES={
+ Wedding:{b:[["Venue & decor",30],["Catering",32],["Photo & video",10],["Attire & beauty",10],["Music & entertainment",6],["Invitations & gifts",4],["Buffer",8]],
+  v:["Venue","Caterer","Photographer & videographer","Decorator / florist","Makeup & mehendi artist","DJ / band","Priest / officiant","Invitation designer","Transport & accommodation"],
+  t:[[26,"Set budget, guest list and date"],[22,"Book venue and caterer"],[18,"Hire photographer, decorator and music"],[12,"Send invitations, book attire and beauty"],[6,"Finalise menu, seating and run-of-show"],[2,"Confirm all vendors and payments"],[0,"Wedding day: assign a point person"]]},
+ Birthday:{b:[["Venue",20],["Food & cake",35],["Decor & balloons",15],["Entertainment",15],["Return gifts",7],["Buffer",8]],
+  v:["Venue / party space","Caterer or restaurant","Custom cake baker","Decorator","Entertainer / host / DJ","Photographer","Return gifts supplier"],
+  t:[[6,"Pick date, theme and guest list"],[5,"Book venue and entertainment"],[4,"Send invitations and track RSVPs"],[2,"Order cake, decor and return gifts"],[1,"Confirm headcount with caterer"],[0,"Party day: set up two hours early"]]},
+ Community:{b:[["Venue & permits",20],["Food & refreshments",25],["Stage, sound & lights",20],["Marketing",10],["Volunteers & supplies",10],["Safety & first aid",5],["Buffer",10]],
+  v:["Venue and permits","Sound and lighting","Caterer / food stalls","Volunteer coordinator","Printer for posters & passes","First-aid and security","Sponsor outreach"],
+  t:[[10,"Define purpose, budget and committee"],[8,"Secure venue, permits and sponsors"],[6,"Book sound, stage and food vendors"],[4,"Launch promotion and recruit volunteers"],[1,"Brief volunteers, test equipment"],[0,"Event day: run-of-show and safety check"]]},
+ Anniversary:{b:[["Venue / dinner",35],["Food & drinks",25],["Decor & flowers",12],["Photos & memories",10],["Gifts & outfits",10],["Buffer",8]],
+  v:["Venue or restaurant","Caterer","Florist","Photographer","Gift and outfit shopping","Music / playlist"],
+  t:[[5,"Pick date, venue and guest list"],[3,"Book vendors and send invites"],[2,"Plan a surprise or memory slideshow"],[0,"Celebrate!"]]},
+ "Baby Shower":{b:[["Venue",20],["Food & dessert",35],["Decor",15],["Games & activities",10],["Favours & gifts",12],["Buffer",8]],
+  v:["Venue","Caterer / dessert table","Decorator","Games host","Favours supplier","Photographer"],
+  t:[[5,"Choose theme, date and guests"],[4,"Book venue and decor"],[3,"Send invitations"],[1,"Confirm food and games"],[0,"Shower day"]]}
+};
+let type="Birthday",plan=null,done={};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=n=>Math.round(n).toLocaleString("en-IN");
+function drawTypes(){const b=$("types");b.innerHTML="";Object.keys(TYPES).forEach(k=>{const e=document.createElement("button");e.type="button";e.className="pill";e.textContent=k;e.setAttribute("aria-pressed",k===type);e.onclick=()=>{type=k;drawTypes()};b.append(e)})}
+drawTypes();
+const d=new Date();d.setDate(d.getDate()+60);$("date").value=d.toISOString().slice(0,10);
+
+function local(inp){const T=TYPES[type],ev=new Date(inp.date),today=new Date();
+ const days=Math.max(1,Math.round((ev-today)/864e5));
+ return{budget:T.b.map(([c,p])=>({cat:c,pct:p})),
+ timeline:T.t.map(([w,task])=>{const u=type==="Wedding"||type==="Community"?"week":"week";return{when:w===0?"Event day":w+" "+u+(w>1?"s":"")+" before",task,weeks:w}}),
+ vendors:T.v.map(v=>({name:v,note:"Compare 3 quotes, confirm in writing"})),
+ ideas:["Theme: "+(inp.vibe||"your favourite colours and memories"),"Create a shared WhatsApp group for RSVPs and updates","Add one signature moment (a toast, a slideshow or a live activity)","Plan for "+inp.guests+" guests with about 10% extra for surprises","Book "+inp.city+" vendors early; peak dates sell out"],
+ note:"Offline template plan ("+days+" days to go)."}}
+
+async function ai(inp){
+ try{const r=await fetch("/api/plan",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({inp,type,today:new Date().toISOString().slice(0,10)})});
+  if(!r.ok)return null;const j=await r.json();
+  if(j&&j.budget&&j.timeline&&j.vendors&&j.ideas){j.note="Personalised by Gemini.";return j}}catch(e){console.warn(e)}
+ return null}
+
+$("form").onsubmit=async e=>{e.preventDefault();
+ const inp={name:$("name").value.trim()||type,city:$("city").value.trim()||"your city",date:$("date").value,guests:+$("guests").value||50,budget:+$("budget").value||100000,cur:$("cur").value,vibe:$("vibe").value.trim()};
+ const btn=$("go"),st=$("status");btn.disabled=true;st.textContent="Planning with AI… this takes a few seconds.";
+ let p=null;try{p=await ai(inp)}catch(x){}
+ if(!p){p=local(inp);st.textContent="AI unavailable, showing a smart template plan instead."}else st.textContent="Done!";
+ const tot=p.budget.reduce((a,b)=>a+(+b.pct||0),0)||100;p.budget.forEach(b=>b.pct=b.pct*100/tot);
+ plan={inp,p,type};done={};render();btn.disabled=false;
+ $("plan").hidden=false;$("plan").focus();$("plan").scrollIntoView({behavior:"smooth"})};
+
+function checklist(id,items,key,pref){const ul=$(id);ul.innerHTML="";
+ items.forEach((it,i)=>{const k=key+i,li=document.createElement("li");li.className="t"+(done[k]?" done":"");
+  const cb=document.createElement("input");cb.type="checkbox";cb.id=k;cb.checked=!!done[k];cb.setAttribute("aria-label",it.task||it.name);
+  cb.onchange=()=>{done[k]=cb.checked;checklist(id,items,key,pref);prog()};
+  const sp=document.createElement("span");
+  sp.innerHTML=(pref(it))+(it.when?"":"");li.append(cb,sp);ul.append(li)})}
+function prog(){const c=(key,n)=>Array.from({length:n},(_,i)=>done[key+i]).filter(Boolean).length;
+ const p=plan.p;$("tprog").textContent=c("t",p.timeline.length)+" of "+p.timeline.length+" tasks done";
+ $("vprog").textContent=c("v",p.vendors.length)+" of "+p.vendors.length+" vendors booked"}
+function render(){const{inp,p}=plan,cur=inp.cur;
+ $("ptitle").textContent=inp.name;
+ $("pmeta").textContent=plan.type+" · "+inp.city+" · "+new Date(inp.date).toDateString()+" · "+inp.guests+" guests · "+p.note;
+ $("budgetBox").innerHTML=p.budget.map(b=>{const a=inp.budget*b.pct/100;return`<div class="bar"><span>${esc(b.cat)}</span><div class="track" role="img" aria-label="${esc(b.cat)} ${Math.round(b.pct)} percent"><div class="fill" style="width:${b.pct}%"></div></div><strong>${cur}${fmt(a)}</strong></div>`}).join("")+`<div class="bar"><strong>Total</strong><span></span><strong>${cur}${fmt(inp.budget)}</strong></div>`;
+ $("perhead").textContent="That is about "+cur+fmt(inp.budget/inp.guests)+" per guest.";
+ $("ideas").innerHTML=p.ideas.map(i=>`<div class="idea">${esc(i)}</div>`).join("");
+ checklist("timeline",p.timeline,"t",i=>`<span class="when">${esc(i.when)}</span><br>${esc(i.task)}`);
+ checklist("vendors",p.vendors,"v",i=>`<strong>${esc(i.name)}</strong><br><span class="note">${esc(i.note||"")}</span>`);
+ prog()}
+
+$("dl").onclick=async()=>{const{inp,p}=plan,cur=inp.cur;
+ const txt=[inp.name+" ("+plan.type+")",inp.city+", "+inp.date+", "+inp.guests+" guests","","BUDGET",...p.budget.map(b=>"- "+b.cat+": "+cur+fmt(inp.budget*b.pct/100)),"","TIMELINE",...p.timeline.map(t=>"- ["+t.when+"] "+t.task),"","VENDORS",...p.vendors.map(v=>"- [ ] "+v.name+": "+(v.note||"")),"","IDEAS",...p.ideas.map(i=>"- "+i)].join("\n");
+ try{const u=URL.createObjectURL(new Blob([txt],{type:"text/plain"}));const l=document.createElement("a");l.href=u;l.download="event-plan.txt";l.click();URL.revokeObjectURL(u)}catch(x){print()}
+};
+</script>
+</body>
+</html>
